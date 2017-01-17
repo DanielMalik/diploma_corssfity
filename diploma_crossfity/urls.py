@@ -15,7 +15,10 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from crossfity.views import AddAthleteUserView, AthleteLog
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^createuser/?$', AddAthleteUserView.as_view(), name='create-new-athlete-user'),
+    url(r'^accounts/login/?$', AthleteLog.as_view(), name='athlete-login'),
 ]
