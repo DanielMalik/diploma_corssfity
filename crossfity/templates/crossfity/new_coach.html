@@ -1,0 +1,51 @@
+{% extends 'crossfity/base.html' %}
+
+{% block title %}
+    CREATE NEW COACH USER
+{% endblock %}
+
+{% block content %}
+    <div class="panel panel-info">
+        <div class="panel-heading">
+           create new user related to Coach model
+        </div>
+        <div class="panel-body">
+
+            <form action="" method="post">
+
+                {% csrf_token %}
+                {{ form.as_p }}
+
+                <input type="submit" value="Register now">
+            </form>
+
+            <p>
+                {% for err in form.non_field_errors %}
+                    <strong>
+                        {{ err|escape }}
+                    </strong>
+                {% endfor %}
+            </p>
+
+
+
+        </div>
+    </div>
+{% endblock %}
+<!--{% block content_js %}-->
+    <!--<script type="text/javascript">-->
+        <!--$(document).ready(function () {-->
+            <!--try {-->
+                <!--$('#bands-table').DataTable({-->
+                    <!--"bFilter": true,-->
+                    <!--"sDom": "lfrtip"-->
+                <!--});-->
+            <!--}-->
+            <!--catch (err) {-->
+            <!--}-->
+        <!--});-->
+    <!--</script>-->
+<!--{% endblock %}-->
+
+
+

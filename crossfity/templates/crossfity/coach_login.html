@@ -1,13 +1,13 @@
-{% extends 'exercises/base.html' %}
+{% extends 'crossfity/base.html' %}
 
 {% block title %}
-    Zadanie 2 Login
+    COACH Login
 {% endblock %}
 
 {% block content %}
     <div class="panel panel-info">
         <div class="panel-heading">
-            Zadanie 2 Login
+            COACH Login
         </div>
         <div class="panel-body">
 
@@ -32,20 +32,20 @@
         </div>
     </div>
 {% endblock %}
-{% block content_js %}
-    <script type="text/javascript">
-        $(document).ready(function () {
-            try {
-                $('#bands-table').DataTable({
-                    "bFilter": true,
-                    "sDom": "lfrtip"
-                });
-            }
-            catch (err) {
-            }
-        });
-    </script>
-{% endblock %}
+<!--{% block content_js %}-->
+    <!--<script type="text/javascript">-->
+        <!--$(document).ready(function () {-->
+            <!--try {-->
+                <!--$('#bands-table').DataTable({-->
+                    <!--"bFilter": true,-->
+                    <!--"sDom": "lfrtip"-->
+                <!--});-->
+            <!--}-->
+            <!--catch (err) {-->
+            <!--}-->
+        <!--});-->
+    <!--</script>-->
+<!--{% endblock %}-->
 
 
 

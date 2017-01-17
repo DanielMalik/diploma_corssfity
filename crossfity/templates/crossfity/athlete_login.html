@@ -1,0 +1,51 @@
+{% extends 'crossfity/base.html' %}
+
+{% block title %}
+    Athlete Login
+{% endblock %}
+
+{% block content %}
+    <div class="panel panel-info">
+        <div class="panel-heading">
+           Athlete Login
+        </div>
+        <div class="panel-body">
+
+            <form action="" method="post">
+
+                {% csrf_token %}
+                {{ form }}
+
+                <input type="submit" value="Login">
+            </form>
+
+            <p>
+                {% for err in form.non_field_errors %}
+                    <strong>
+                        {{ err|escape }}
+                    </strong>
+                {% endfor %}
+            </p>
+
+
+
+        </div>
+    </div>
+{% endblock %}
+<!--{% block content_js %}-->
+    <!--<script type="text/javascript">-->
+        <!--$(document).ready(function () {-->
+            <!--try {-->
+                <!--$('#bands-table').DataTable({-->
+                    <!--"bFilter": true,-->
+                    <!--"sDom": "lfrtip"-->
+                <!--});-->
+            <!--}-->
+            <!--catch (err) {-->
+            <!--}-->
+        <!--});-->
+    <!--</script>-->
+<!--{% endblock %}-->
+
+
+
