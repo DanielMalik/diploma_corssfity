@@ -1,10 +1,12 @@
 from django.shortcuts import render
 from django.utils import timezone
 from crossfity.models import Coach, Athlete
-from crossfity.forms import AddAthleteUser, AddCoachUser, AthleteLogin, CoachLogin
+from crossfity.forms import AddAthleteUser, AddCoachUser, AthleteLogin, CoachLogin, CoachAuthenticationForm
+from crossfity.forms import CoachApplication
 
 from django.shortcuts import render, redirect
 from django.views import View
+from django.contrib.auth.forms import UserCreationForm
 
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -25,100 +27,77 @@ from django.views.generic import DeleteView
 from django.views.generic import FormView
 from django.views.generic import UpdateView
 
+from sendsms import api
+
 
 # Create your views here.
 
 class AddAthleteUserView(View):
+
     def get(self, request):
-        form = AddAthleteUser
+        form = UserCreationForm
         return render(request, 'crossfity/new_athlete.html', {'form': form})
 
     def post(self, request):
-        form = AddAthleteUser(request.POST)
+        form = UserCreationForm(request.POST)
+
         if form.is_valid():
+            form.save()
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
-            print(password)
             password2 = form.cleaned_data['password2']
-            print(password2)
-            first_name = form.cleaned_data['f_name']
-            last_name = form.cleaned_data['l_name']
-            email = form.cleaned_data['e_mail']
-            if password == password2:
-                user = authenticate(username=username,
-                                    password=password)
-                if user is None:
-                    new_user = User.objects.create_user(username, email, password)
-                    new_user.username = username
-                    new_user.password = password
-                    new_user.email = email
-                    new_user.first_name = first_name
-                    new_user.last_name = last_name
-                    new_user.save()
-                    new_athlete = Athlete.objects.create(user=User.objects.get(username=username))
-                    new_athlete.save()
-                    print(new_user)
-                    print(new_athlete)
-                    return render(request, 'crossfity/thanks.html')
-                else:
-                    form.add_error(None, "user exists")
-                    return render(request, "crossfity/new_athlete.html", {"form": form})
+            new_athlete = Athlete.objects.create(user=User.objects.get(username=username))
+            new_athlete.save()
+            return redirect('profile')
+        else:
+            form_user.add_error(None, "ERROR")
+            return render(request, "crossifty/new_athlete.html", {"form": form})
 
-            else:
-                form.add_error(None, "match error")
-                return render(request, "crossfity/new_athlete.html", {"form": form})
-
+# preliminary verification for new coach user - we must be sure he has at least CF Level one cert.
+class CoachVerification(View):
+    # anyone can access this form
+    def get(self, request):
+        form = CoachAuthenticationForm
+        return render(request, 'crossfity/coach_verification.html', {'form': form})
+    # this will write application to database - admin must review it manually and respond
+    def post(self, request):
+        form = CoachAuthenticationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return render(request, 'crossfity/apply_thanks.html')
 
         else:
-            form.add_error(None, "ERROR")
-            return render(request, "crossfity/new_athlete.html", {"form": form})
+            form_user.add_error(None, "ERROR")
+            return render(request, "crossifty/coach_verification.html", {"form": form})
 
 
+#     this is view of applications to coach users - for admin only - review candidates here
+class CoachApplivationView(UpdateView):
+    model = CoachApplication
+    fields = ['name', 'certification', 'status']
+    template_name_suffix = '_admin_review'
+#     ok, this one can/t be generic, because i want to send him an email and sms after I confirm his cartifications.
+
+# this needs to be blocked, access only via likn sent in e mail(with one-time token)
 class AddCoachUserView(View):
     def get(self, request):
-        form = AddCoachUser
+        form = UserCreationForm
         return render(request, 'crossfity/new_coach.html', {'form': form})
 
     def post(self, request):
-        form = AddCoachUser(request.POST)
+        form = UserCreationForm(request.POST)
+
         if form.is_valid():
+            form.save()
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
-            print(password)
             password2 = form.cleaned_data['password2']
-            print(password2)
-            first_name = form.cleaned_data['f_name']
-            last_name = form.cleaned_data['l_name']
-            email = form.cleaned_data['e_mail']
-            if password == password2:
-                user = authenticate(username=username,
-                                    password=password)
-                if user is None:
-                    new_user = User.objects.create_user(username, email, password)
-                    new_user.username = username
-                    new_user.password = password
-                    new_user.email = email
-                    new_user.first_name = first_name
-                    new_user.last_name = last_name
-                    new_user.save()
-                    new_athlete = Coach.objects.create(user=User.objects.get(username=username))
-                    new_athlete.save()
-                    print(new_user)
-                    print(new_athlete)
-                    return render(request, 'crossfity/thanks.html')
-                else:
-                    form.add_error(None, "user exists")
-                    return render(request, "crossfity/new_coach.html", {"form": form})
-
-            else:
-                form.add_error(None, "match error")
-                return render(request, "crossfity/new_coach.html", {"form": form})
-
-
+            new_coach = Coach.objects.create(user=User.objects.get(username=username))
+            new_coach.save()
+            return redirect('coach-profile')
         else:
-            form.add_error(None, "ERROR")
-            return render(request, "crossfity/new_coach.html", {"form": form})
-
+            form_user.add_error(None, "ERROR")
+            return render(request, "crossifty/new_coach.html", {"form": form})
 
 class AthleteLog(View):
 

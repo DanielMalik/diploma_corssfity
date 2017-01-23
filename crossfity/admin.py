@@ -1,8 +1,12 @@
 from django.contrib import admin
 from django.contrib.auth.models import User
-from crossfity.models import Coach, Athlete, WOD_amrap, WOD_emom, WOD_interval, WOD_tabata, WODpersonal
+from crossfity.models import CoachApplication, Coach, Athlete, WOD_amrap, WOD_emom, WOD_interval, WOD_tabata, WODpersonal
 
 # Register your models here.
+
+@admin.register(CoachApplication)
+class CoachApplicationAdmin(admin.ModelAdmin):
+    list_display = ('name', 'surname', 'certification', 'e_mail', 'phone_number', 'description', 'application_date', 'status')
 
 @admin.register(Coach)
 class CoachAdmin(admin.ModelAdmin):

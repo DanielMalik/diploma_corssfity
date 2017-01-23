@@ -1,24 +1,24 @@
 {% extends 'crossfity/base.html' %}
 
-
-
 {% block title %}
-    Athlete Login
+    APPLY TO CREATE NEW COACH USER
 {% endblock %}
 
 {% block content %}
     <div class="panel panel-info">
         <div class="panel-heading">
-           Athlete Login
+           create new user related to Coach model
+            <h3>not everyone can be a coach</h3>
+            'crossfity' needs to check if you have at least CrossFit Level 1 certification
         </div>
         <div class="panel-body">
 
             <form action="" method="post">
 
                 {% csrf_token %}
-                {{ form }}
+                {{ form.as_p }}
 
-                <input type="submit" value="Login">
+                <input type="submit" value="Apply">
             </form>
 
             <p>

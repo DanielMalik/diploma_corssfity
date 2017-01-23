@@ -1,4 +1,6 @@
 from django import forms
+
+from crossfity.models import CoachApplication
 from django.forms import ModelForm
 from django.utils import timezone
 from crossfity import models
@@ -13,6 +15,12 @@ class AddAthleteUser(forms.Form):
     f_name = forms.CharField(max_length=128, label="Name")
     l_name = forms.CharField(max_length=128, label="Surname")
     e_mail = forms.EmailField(label="e-mail")
+
+class CoachAuthenticationForm(ModelForm):
+    class Meta:
+        model = CoachApplication
+        fields = '__all__'
+        widgets = {'application_date': forms.HiddenInput(), 'status': forms.HiddenInput()}
 
 class AddCoachUser(forms.Form):
     username = forms.CharField(max_length=128, label="Username")
