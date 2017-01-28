@@ -72,13 +72,23 @@ class CoachVerification(View):
 
 
 #     this is view of applications to coach users - for admin only - review candidates here
-class CoachApplivationView(UpdateView):
-    model = CoachApplication
-    fields = ['name', 'certification', 'status']
-    template_name_suffix = '_admin_review'
-#     ok, this one can/t be generic, because i want to send him an email and sms after I confirm his cartifications.
+class CoachApplivationsView(View):
+    def get(self, request):
+        ctx = {}
+        ctx['aplications'] = CoachApplication.objects.all
+        return render(request, 'crossfity/coachapplication_admin_review.html', ctx)
 
-# this needs to be blocked, access only via likn sent in e mail(with one-time token)
+    def post(self, request):
+        pass
+#     admin can view all aplications, after verification gcan send mail-sms for further registration,
+#  or give sttus 'pending', send feedback to aplicant with add questions
+#  or delete aplication and inform applicant, can add to 'blocked' if this user is annoying
+class CoachApplivationView(View):
+    pass
+class CoachApplivationDeleteView(View):
+    pass
+
+# this needs to be blocked, access only via link sent in e mail(with one-time token)
 class AddCoachUserView(View):
     def get(self, request):
         form = UserCreationForm

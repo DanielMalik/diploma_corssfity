@@ -14,13 +14,32 @@
         </div>
         <div class="panel-body">
 
-            <form action="" method="post">
+            {% for a in aplications %}
 
-                {% csrf_token %}
-                {{ form.as_p }}
+            <!--add {if} a.status == True than no buttons and add class 'accepted' . {else} this:-->
 
-                <input type="submit" value="proceed">
-            </form>
+            <div id="{{ a.id }}">
+                <h3> Application no {{ a.id }}</h3>
+                <p> {{a.name}}</p>
+                <p> {{a.surname}}</p>
+                <p> {{a.certification}}</p>
+                <p> {{a.e_mail}}</p>
+                <p> {{a.phone_number}}</p>
+                <p> {{a.description}}</p>
+                <p> {{a.aplication_date}}</p>
+                <p> {{a.status}}</p>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <a href="http://crossfit.com" id="{{ a.id }}" class="btn btn-primary">Accept</a>
+
+                    <a href="{% url 'athlete-login' %}" id="{{ a.id }}" class="btn btn-danger">Delete</a>
+                </form>
+            </div>
+
+
+            {% endfor %}
+
+
 
             <p>
                 {% for err in form.non_field_errors %}
