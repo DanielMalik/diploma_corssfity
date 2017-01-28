@@ -1,0 +1,45 @@
+{% extends 'crossfity/base.html' %}
+
+{% block title %}
+    ACCEPT APPLICATION
+{% endblock %}
+
+{% block content %}
+    <div class="panel panel-info">
+        <div class="panel-heading">
+          Accept Application of {{ aplicant.id }}
+            <h3>not everyone can be a coach</h3>
+            <h4>are you shure you want to accept this person as a new coach?</h4>
+
+        </div>
+        <div class="panel-body">
+
+           <form action="" method="post">{% csrf_token %}
+                <p>Are you sure you want to accept application number :{{ aplicant.id }}?</p>
+                <p> Name: {{aplicant.name}}</p>
+                <p> Surname: {{aplicant.surname}}</p>
+                <p> Certificate: {{aplicant.certification}}</p>
+                <p> email: {{aplicant.e_mail}}</p>
+                <p> phone: {{aplicant.phone_number}}</p>
+                <p> about: {{aplicant.description}}</p>
+                <p> aded: {{aplicant.application_date}}</p>
+                <h4> ACCEPTED :</h4>
+                {{ form.as_p }}
+
+                <input type="submit" value="ACCEPT" class="btn btn-danger"/>
+
+               <a href="{% url 'review-coach-applicants' %}"  id=" dontdelete {{ object.id }}" class="btn btn-primary">Reconsider</a>
+            </form>
+            <p>
+                {% for err in form.non_field_errors %}
+                    <strong>
+                        {{ err|escape }}
+                    </strong>
+                {% endfor %}
+            </p>
+
+
+
+        </div>
+    </div>
+{% endblock %}

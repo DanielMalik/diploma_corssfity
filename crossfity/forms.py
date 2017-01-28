@@ -22,6 +22,12 @@ class CoachAuthenticationForm(ModelForm):
         fields = '__all__'
         widgets = {'application_date': forms.HiddenInput(), 'status': forms.HiddenInput()}
 
+class CoachApplicationStatus(ModelForm):
+    class Meta:
+        model = CoachApplication
+        fields = ['status', 'pass_mail', 'pass_phone']
+        widgets = {'pass_mail': forms.HiddenInput(), 'pass_phone': forms.HiddenInput()}
+
 class AddCoachUser(forms.Form):
     username = forms.CharField(max_length=128, label="Username")
     password1 = forms.CharField(widget=forms.PasswordInput, label="Password")

@@ -1,0 +1,43 @@
+{% extends 'crossfity/base.html' %}
+
+{% block title %}
+    DELETE APPLICATION
+{% endblock %}
+
+{% block content %}
+    <div class="panel panel-info">
+        <div class="panel-heading">
+           Delete Application of {{ object }}
+            <h3>not everyone can be a coach</h3>
+            <h4>are you shure you want to disqualify this person?</h4>
+
+        </div>
+        <div class="panel-body">
+
+           <form action="" method="post">{% csrf_token %}
+                <p>Are you sure you want to delete application number :{{ object.id }}?</p>
+                <p> Name: {{object.name}}</p>
+                <p> Surname: {{object.surname}}</p>
+                <p> Certificate: {{object.certification}}</p>
+                <p> email: {{object.e_mail}}</p>
+                <p> phone: {{object.phone_number}}</p>
+                <p> about: {{object.description}}</p>
+                <p> aded: {{object.application_date}}</p>
+
+                <input type="submit" value="DELETE" class="btn btn-danger"/>
+
+               <a href="{% url 'review-coach-applicants' %}"  id=" dontdelete {{ object.id }}" class="btn btn-primary">Reconsider</a>
+            </form>
+            <p>
+                {% for err in form.non_field_errors %}
+                    <strong>
+                        {{ err|escape }}
+                    </strong>
+                {% endfor %}
+            </p>
+
+
+
+        </div>
+    </div>
+{% endblock %}

@@ -60,4 +60,6 @@ class CoachApplication(models.Model):
     description = models.TextField(null=False, blank=False)
     application_date = models.DateTimeField(default=timezone.now)
     status = models.NullBooleanField()
+    pass_mail = models.CharField(max_length=64, null=True, blank=True)
+    pass_phone = models.CharField(max_length=64, null=True, blank=True)
 

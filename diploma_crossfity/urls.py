@@ -25,9 +25,9 @@ urlpatterns = [
     url(r'^createuser/?$', AddAthleteUserView.as_view(), name='create-new-athlete-user'),
     url(r'^accounts/login/?$', AthleteLog.as_view(), name='athlete-login'),
     url(r'^newcoach?$', CoachVerification.as_view(), name='coach-verification'),
-    url(r'^createuser_coach/?$', AddCoachUserView.as_view(), name='create-new-coach-user'),
+    url(r'^createuser_coach/(?P<pass_mails>([A-Z]{1}[A-Za-z0-9][\w|\W]+))$', AddCoachUserView.as_view(), name='create-new-coach-user'),
     url(r'^accounts/login_coach?$', CoachLog.as_view(), name='coach-login'),
     url(r'^coachapplication/?$', CoachApplivationsView.as_view(), name='review-coach-applicants'),
-    url(r'^coachapplicationaccept/?$', CoachApplivationView.as_view(), name='review-coach-applicants-accept'),
-    url(r'^coachapplicationdelete/?$', CoachApplivationDeleteView.as_view(), name='review-coach-applicants-delete'),
+    url(r'^coachapplicationaccept/(?P<pk>\d+)/?$', CoachApplivationView.as_view(), name='review-coach-applicants-accept'),
+    url(r'^coachapplicationdelete/(?P<pk>\d+)/?$', CoachApplivationDeleteView.as_view(), name='review-coach-applicants-delete'),
 ]

@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.utils import timezone
 from crossfity.models import Coach, Athlete
 from crossfity.forms import AddAthleteUser, AddCoachUser, AthleteLogin, CoachLogin, CoachAuthenticationForm
-from crossfity.forms import CoachApplication
+from crossfity.forms import CoachApplication, CoachApplicationStatus
 
 from django.shortcuts import render, redirect
 from django.views import View
@@ -83,10 +83,41 @@ class CoachApplivationsView(View):
 #     admin can view all aplications, after verification gcan send mail-sms for further registration,
 #  or give sttus 'pending', send feedback to aplicant with add questions
 #  or delete aplication and inform applicant, can add to 'blocked' if this user is annoying
-class CoachApplivationView(View):
-    pass
-class CoachApplivationDeleteView(View):
-    pass
+
+class CoachApplivationView(View): #change status of aplicatiom to
+    def get(self, request, pk):
+        aplicant = CoachApplication.objects.get(pk=pk)
+        form = CoachApplicationStatus(instance=aplicant)
+
+        return render(request, 'crossfity/coachapplication_update_form.html', {'form': form, 'aplicant': aplicant})
+    def post(self, request, pk):
+        aplicant = CoachApplication.objects.get(pk=pk)
+        form = CoachApplicationStatus(request.POST, instance=aplicant)
+        mail = aplicant.e_mail
+        pass_mail = User.objects.make_random_password()
+        print('PASSWORD is:' + pass_mail)
+        phone = aplicant.phone_number
+        pass_phone = User.objects.make_random_password()
+        print('PASSWORD PHONE is:' + pass_phone)
+
+
+        if form.is_valid():
+            aplicant.pass_mail = pass_mail
+            aplicant.pass_phone = pass_phone
+            aplicant.save()
+            form.save()
+
+        return redirect('review-coach-applicants')
+
+# class CoachApplivationView(UpdateView):  #change status of aplicatiom to
+#     model = CoachApplication
+#     fields = ['status']
+#     template_name_suffix = '_update_form'
+#     success_url = reverse_lazy('review-coach-applicants')
+
+class CoachApplivationDeleteView(DeleteView):
+    model = CoachApplication
+    success_url = reverse_lazy('review-coach-applicants')
 
 # this needs to be blocked, access only via link sent in e mail(with one-time token)
 class AddCoachUserView(View):

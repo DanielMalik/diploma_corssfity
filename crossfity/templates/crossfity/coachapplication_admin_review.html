@@ -20,19 +20,23 @@
 
             <div id="{{ a.id }}">
                 <h3> Application no {{ a.id }}</h3>
-                <p> {{a.name}}</p>
-                <p> {{a.surname}}</p>
-                <p> {{a.certification}}</p>
-                <p> {{a.e_mail}}</p>
-                <p> {{a.phone_number}}</p>
-                <p> {{a.description}}</p>
-                <p> {{a.aplication_date}}</p>
-                <p> {{a.status}}</p>
+                <p> Name: {{a.name}}</p>
+                <p> Surname: {{a.surname}}</p>
+                <p> Certificate: {{a.certification}}</p>
+                <p> email: {{a.e_mail}}</p>
+                <p> phone: {{a.phone_number}}</p>
+                <p> about: {{a.description}}</p>
+                <p> aded: {{a.application_date}}</p>
+                <p> STATUS: {{a.status}}</p>
                 <form action="" method="post">
                     {% csrf_token %}
-                    <a href="http://crossfit.com" id="{{ a.id }}" class="btn btn-primary">Accept</a>
+                    <a href="/coachapplicationaccept/{{ a.id }}"  id=" accept {{ a.id }}" class="btn btn-primary">Accept</a>
 
-                    <a href="{% url 'athlete-login' %}" id="{{ a.id }}" class="btn btn-danger">Delete</a>
+                    <a href="/coachapplicationdelete/{{ a.id }}" id="delete {{ a.id }}" class="btn btn-danger">Delete</a>
+
+                    <button id="mess {{ a.id }}" class="btn btn-secondary">Message</button>
+                    <input type="textarea" name="message to {{ a.id }}" class="hidden">
+                    <input type="submit" value="Send Message" class="btn hidden">
                 </form>
             </div>
 
