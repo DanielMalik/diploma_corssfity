@@ -98,21 +98,36 @@ class CoachApplivationView(PermissionRequiredMixin, View): #change status of apl
     def post(self, request, pk):
         aplicant = CoachApplication.objects.get(pk=pk)
         form = CoachApplicationStatus(request.POST, instance=aplicant)
-        mail = aplicant.e_mail
-        pass_mail = User.objects.make_random_password()
-        print('PASSWORD is:' + pass_mail)
-        phone = aplicant.phone_number
-        pass_phone = User.objects.make_random_password()
-        print('PASSWORD PHONE is:' + pass_phone)
-
-
         if form.is_valid():
-            aplicant.pass_mail = pass_mail
-            aplicant.pass_phone = pass_phone
-            aplicant.save()
             form.save()
+            if form.cleaned_data['status'] == True:
+                #now we want to send codes only if status is true
+                mail = aplicant.e_mail
+                pass_mail = User.objects.make_random_password()
+                print('PASSWORD is:' + pass_mail)
+                phone = aplicant.phone_number
+                pass_phone = User.objects.make_random_password()
+                print('PASSWORD PHONE is:' + pass_phone)
+                apl_code_forurl = aplicant.id
+                print('APL_CODE is: ' + str(apl_code_forurl))
 
-        return redirect('review-coach-applicants')
+                link = 'http://127.0.0.1:8000/ctr_coach/%s/%s' % (str(apl_code_forurl), pass_mail)
+                print(link)
+
+
+                aplicant.pass_mail = pass_mail
+                aplicant.pass_phone = pass_phone
+                aplicant.save()
+
+
+                return redirect('review-coach-applicants')
+            else:
+                #status none of false
+
+                return redirect('review-coach-applicants')
+        else:
+            return redirect('review-coach-applicants')
+
 
 # class CoachApplivationView(UpdateView):  #change status of aplicatiom to
 #     model = CoachApplication
@@ -128,8 +143,11 @@ class CoachApplivationDeleteView(PermissionRequiredMixin, DeleteView):
 
 # this needs to be blocked, access only via link sent in e mail(with one-time token)
 class AddCoachUserView(View):
-    def get(self, request, pass_mails):
-        if pass_mails == putmailpasswordheresomehow:
+    def get(self, request, apl_code, pass_mails):
+        aplication_instance = CoachApplication.objects.get(pk=apl_code)
+            #here I get info from url about what coachaplication I need to refer
+        print(aplication_instance)
+        if pass_mails == aplication_instance.pass_mail:
 
             form = UserCreationForm
             form_coach = AddCoachUser()
