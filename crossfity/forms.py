@@ -19,7 +19,7 @@ class AddAthleteUser(forms.Form):
 class CoachAuthenticationForm(ModelForm):
     class Meta:
         model = CoachApplication
-        fields = '__all__'
+        fields = ['name', 'surname', 'certification', 'e_mail', 'phone_number', 'description', 'application_date', 'status']
         widgets = {'application_date': forms.HiddenInput(), 'status': forms.HiddenInput()}
 
 class CoachApplicationStatus(ModelForm):

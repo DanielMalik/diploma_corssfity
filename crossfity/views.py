@@ -50,7 +50,7 @@ class AddAthleteUserView(View):
             new_athlete.save()
             return redirect('profile')
         else:
-            form_user.add_error(None, "ERROR")
+            form.add_error(None, "ERROR")
             return render(request, "crossifty/new_athlete.html", {"form": form})
 
 # preliminary verification for new coach user - we must be sure he has at least CF Level one cert.
@@ -67,12 +67,13 @@ class CoachVerification(View):
             return render(request, 'crossfity/apply_thanks.html')
 
         else:
-            form_user.add_error(None, "ERROR")
-            return render(request, "crossifty/coach_verification.html", {"form": form})
+            form.add_error(None, "ERROR")
+            return render(request, 'crossfity/coach_verification.html', {"form": form})
 
 
 #     this is view of applications to coach users - for admin only - review candidates here
-class CoachApplivationsView(View):
+class CoachApplivationsView(PermissionRequiredMixin, View):
+    permission_required = "change_coachapplication"
     def get(self, request):
         ctx = {}
         ctx['aplications'] = CoachApplication.objects.all
@@ -84,7 +85,11 @@ class CoachApplivationsView(View):
 #  or give sttus 'pending', send feedback to aplicant with add questions
 #  or delete aplication and inform applicant, can add to 'blocked' if this user is annoying
 
-class CoachApplivationView(View): #change status of aplicatiom to
+class CoachApplivationView(PermissionRequiredMixin, View): #change status of aplicatiom to
+
+    permission_required = "change_coachapplication"
+
+
     def get(self, request, pk):
         aplicant = CoachApplication.objects.get(pk=pk)
         form = CoachApplicationStatus(instance=aplicant)
@@ -115,16 +120,22 @@ class CoachApplivationView(View): #change status of aplicatiom to
 #     template_name_suffix = '_update_form'
 #     success_url = reverse_lazy('review-coach-applicants')
 
-class CoachApplivationDeleteView(DeleteView):
+class CoachApplivationDeleteView(PermissionRequiredMixin, DeleteView):
+    permission_required = "delete_coachapplication"
+
     model = CoachApplication
     success_url = reverse_lazy('review-coach-applicants')
 
 # this needs to be blocked, access only via link sent in e mail(with one-time token)
 class AddCoachUserView(View):
-    def get(self, request):
-        form = UserCreationForm
-        return render(request, 'crossfity/new_coach.html', {'form': form})
+    def get(self, request, pass_mails):
+        if pass_mails == putmailpasswordheresomehow:
 
+            form = UserCreationForm
+            form_coach = AddCoachUser()
+            return render(request, 'crossfity/new_coach.html', {'form': form, 'form_coach': form_coach})
+        else:
+            return reverse_lazy('coach-verification')
     def post(self, request):
         form = UserCreationForm(request.POST)
 
