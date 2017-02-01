@@ -143,3 +143,9 @@ REST_FRAMEWORK = {
 }
 
 SENDSMS_BACKEND = 'myapp.mysmsbackend.SmsBackend'
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'djangocrossfitytest@gmail.com' # tu wpisac maila aby działało
+EMAIL_HOST_PASSWORD = 'XXXXXXXXXXXXX' #tu wpisac hasło zeby działało
+EMAIL_PORT = 587

@@ -19,6 +19,7 @@ from django.db.models import Q
 import operator
 import functools
 from django.urls import reverse_lazy
+from django.core.mail import send_mail
 
 from django.forms import ModelForm
 from django.forms.models import modelform_factory
@@ -117,8 +118,15 @@ class CoachApplivationView(PermissionRequiredMixin, View): #change status of apl
 
                 aplicant.pass_mail = pass_mail
                 aplicant.pass_phone = pass_phone
+                mail = aplicant.e_mail
                 aplicant.save()
-
+                send_mail(
+                    'MAIL TITLE',
+                    'MAIL CONTENT + LINK %s' % link,
+                    'djangocrossfitytest@gmail.com',
+                    [mail],
+                    fail_silently=False,
+                )
 
                 return redirect('review-coach-applicants')
             else:
@@ -148,26 +156,47 @@ class AddCoachUserView(View):
             #here I get info from url about what coachaplication I need to refer
         print(aplication_instance)
         if pass_mails == aplication_instance.pass_mail:
+            print(aplication_instance.name)
 
             form = UserCreationForm
             form_coach = AddCoachUser()
             return render(request, 'crossfity/new_coach.html', {'form': form, 'form_coach': form_coach})
         else:
             return reverse_lazy('coach-verification')
-    def post(self, request):
+    def post(self, request, apl_code, pass_mails):
+        aplication_instance = CoachApplication.objects.get(pk=apl_code)
         form = UserCreationForm(request.POST)
+        form_coach = AddCoachUser(request.POST, request.FILES)
 
-        if form.is_valid():
-            form.save()
+        if form.is_valid() and form_coach.is_valid() and pass_mails == aplication_instance.pass_mail\
+                and aplication_instance.pass_coach_added == False:
             username = form.cleaned_data['username']
-            password = form.cleaned_data['password1']
-            password2 = form.cleaned_data['password2']
-            new_coach = Coach.objects.create(user=User.objects.get(username=username))
-            new_coach.save()
-            return redirect('coach-profile')
+            if not User.objects.filter(username=form.cleaned_data['username']).exists():
+
+                if form_coach.cleaned_data['sms_code'] == aplication_instance.pass_phone:
+                    form.save()
+
+                    aplication_instance.pass_coach_added = True
+                    aplication_instance.save()
+                    print(aplication_instance.pass_coach_added)
+
+                    password = form.cleaned_data['password1']
+                    password2 = form.cleaned_data['password2']
+                    new_coach = Coach.objects.create(user=User.objects.get(username=username))
+                    new_coach.save()
+                    form_coach2 = AddCoachUser(request.POST, request.FILES, instance=new_coach)
+                    form_coach2.save()
+
+                    return redirect('coach-login')
+                else:
+                    form.add_error(None, "ERROR - sms code")
+                    return render(request, 'crossfity/new_coach.html', {"form": form, 'form_coach': form_coach})
+            else:
+                form.add_error(None, "ERROR - username taken")
+                return render(request, 'crossfity/new_coach.html', {"form": form, 'form_coach': form_coach})
         else:
-            form_user.add_error(None, "ERROR")
-            return render(request, "crossifty/new_coach.html", {"form": form})
+            form.add_error(None, "ERROR - form1, form2 or url")
+            return render(request, 'crossfity/new_coach.html', {"form": form, 'form_coach': form_coach})
 
 class AthleteLog(View):
 
@@ -232,3 +261,8 @@ class CoachLog(View):
 def logout_view(request):
     logout(request)
     return render(request, 'crossfity/athlete_login.html')
+
+class CoachProfile(View):
+    def get(self, request):
+        user = request.user.username
+        return HttpResponse("to bedzie profil kołcza %s" % user)

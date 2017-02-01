@@ -1,6 +1,6 @@
 from django import forms
 
-from crossfity.models import CoachApplication
+from crossfity.models import CoachApplication, Coach
 from django.forms import ModelForm
 from django.utils import timezone
 from crossfity import models
@@ -28,13 +28,18 @@ class CoachApplicationStatus(ModelForm):
         fields = ['status', 'pass_mail', 'pass_phone']
         widgets = {'pass_mail': forms.HiddenInput(), 'pass_phone': forms.HiddenInput()}
 
-class AddCoachUser(forms.Form):
-    username = forms.CharField(max_length=128, label="Username")
-    password1 = forms.CharField(widget=forms.PasswordInput, label="Password")
-    password2 = forms.CharField(widget=forms.PasswordInput, label="Repeat password")
-    f_name = forms.CharField(max_length=128, label="Name")
-    l_name = forms.CharField(max_length=128, label="Surname")
-    e_mail = forms.EmailField(label="e-mail")
+class AddCoachUser(ModelForm):
+    class Meta:
+        model = Coach
+        fields = '__all__'
+        exclude = ['user',]
+# class AddCoachUser(forms.Form):
+#     username = forms.CharField(max_length=128, label="Username")
+#     password1 = forms.CharField(widget=forms.PasswordInput, label="Password")
+#     password2 = forms.CharField(widget=forms.PasswordInput, label="Repeat password")
+#     f_name = forms.CharField(max_length=128, label="Name")
+#     l_name = forms.CharField(max_length=128, label="Surname")
+#     e_mail = forms.EmailField(label="e-mail")
 
 class AthleteLogin(forms.Form):
     login = forms.CharField(max_length=128)

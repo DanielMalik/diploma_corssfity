@@ -17,7 +17,7 @@ from django.conf.urls import url
 from django.contrib import admin
 from django.contrib.auth.views import logout_then_login
 from crossfity.views import AddAthleteUserView, AthleteLog, AddCoachUserView, CoachLog, CoachVerification, \
-    CoachApplivationsView, CoachApplivationView, CoachApplivationDeleteView
+    CoachApplivationsView, CoachApplivationView, CoachApplivationDeleteView, CoachProfile
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^createuser/?$', AddAthleteUserView.as_view(), name='create-new-athlete-user'),
     url(r'^accounts/login/?$', AthleteLog.as_view(), name='athlete-login'),
     url(r'^newcoach?$', CoachVerification.as_view(), name='coach-verification'),
+    url(r'^coach?$', CoachProfile.as_view(), name='coach-profile'),
     url(r'^ctr_coach/(?P<apl_code>\d+)/(?P<pass_mails>.+)/$', AddCoachUserView.as_view(), name='create-new-coach-user'),
     url(r'^accounts/login_coach?$', CoachLog.as_view(), name='coach-login'),
     url(r'^coachapplication/?$', CoachApplivationsView.as_view(), name='review-coach-applicants'),
