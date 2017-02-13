@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bootstrap3',
     'rest_framework',
+    'oauth2_provider',
+    'corsheaders',
     'crossfity',
 ]
 
@@ -50,6 +52,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    # 'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+    'oauth2_provider.middleware.OAuth2TokenMiddleware',
 ]
 
 ROOT_URLCONF = 'diploma_crossfity.urls'
@@ -147,5 +152,16 @@ SENDSMS_BACKEND = 'myapp.mysmsbackend.SmsBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'djangocrossfitytest@gmail.com' # tu wpisac maila aby działało
-EMAIL_HOST_PASSWORD = 'XXXXXXXXXXXXX' #tu wpisac hasło zeby działało
+EMAIL_HOST_PASSWORD = 'coderslab' #tu wpisac hasło zeby działało
 EMAIL_PORT = 587
+
+# settings for django oauth2
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'oauth2_provider.backends.OAuth2Backend',
+    )
+
+CORS_ORIGIN_ALLOW_ALL = True
+#cl id DITddv3HLNKkV6GGHKELoNWOkpttUeicl0wlokKz
+#cl secret XGyQzOJNw62oU5HvqDQtWYXYO6fAo3mlkiaaGTk7xnrM1rYhNWrrof26xJoPY7rXPs3H4OsVIE7C6XGyH9sXYc59CFqn3BHQMgCJt88mV7CWT4iGBkKq46iifzNK4nNn

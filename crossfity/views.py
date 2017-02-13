@@ -11,28 +11,34 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
+
+from oauth2_provider.views.generic import ProtectedResourceView
 
 from django.http import HttpResponse
 
-from django.db.models import Q
-import operator
-import functools
 from django.urls import reverse_lazy
 from django.core.mail import send_mail
 
-from django.forms import ModelForm
-from django.forms.models import modelform_factory
-from django.views.generic import CreateView
 from django.views.generic import DeleteView
-from django.views.generic import FormView
-from django.views.generic import UpdateView
+
 
 from sendsms import api
 
-
 # Create your views here.
+#oauth2
 
+class ApiEndpoint(ProtectedResourceView):
+    def get(self, request, *args, **kwargs):
+        return HttpResponse('Hello, OAuth2!')
+
+@login_required()
+def secret_page(request, *args, **kwargs):
+    return HttpResponse('Secret contents!', status=200)
+
+
+# mu views
 class AddAthleteUserView(View):
 
     def get(self, request):

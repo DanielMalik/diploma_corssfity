@@ -18,6 +18,8 @@
                 {% csrf_token %}
                 {{ form }}
 
+                <input type="hidden" name="next" value="{{ next }}" /> <!-- input for django-oauth2-->
+
                 <input type="submit" value="Login">
             </form>
 
