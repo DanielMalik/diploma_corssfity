@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.utils import timezone
-from crossfity.models import Coach, Athlete
+from crossfity.models import Coach, Athlete, WOD
 from crossfity.forms import AddAthleteUser, AddCoachUser, AthleteLogin, CoachLogin, CoachAuthenticationForm
 from crossfity.forms import CoachApplication, CoachApplicationStatus
 
@@ -271,4 +271,6 @@ def logout_view(request):
 class CoachProfile(View):
     def get(self, request):
         user = request.user.username
-        return HttpResponse("to bedzie profil kołcza %s" % user)
+        wods = WOD.objects.all()
+        ctx = {'user': user, 'wods': wods}
+        return render(request, 'crossfity/profile.html', ctx)

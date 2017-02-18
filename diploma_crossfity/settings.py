@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrap3',
+    'taggit',
     'rest_framework',
     'oauth2_provider',
     'corsheaders',

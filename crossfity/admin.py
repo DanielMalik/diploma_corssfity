@@ -1,12 +1,13 @@
 from django.contrib import admin
 from django.contrib.auth.models import User
-from crossfity.models import CoachApplication, Coach, Athlete, WOD_amrap, WOD_emom, WOD_interval, WOD_tabata, WODpersonal
+from crossfity.models import CoachApplication, Coach, Athlete, Movement, Element, WOD, WODpersonal
 
 # Register your models here.
 
 @admin.register(CoachApplication)
 class CoachApplicationAdmin(admin.ModelAdmin):
-    list_display = ('name', 'surname', 'certification', 'e_mail', 'phone_number', 'description', 'application_date', 'status')
+    list_display = ('name', 'surname', 'certification', 'e_mail', 'phone_number',
+                    'description', 'application_date', 'status')
 
 @admin.register(Coach)
 class CoachAdmin(admin.ModelAdmin):
@@ -17,21 +18,19 @@ class CoachAdmin(admin.ModelAdmin):
 class AthleteAdmin(admin.ModelAdmin):
     list_display = ('user', 'avatar', 'box')
 
-@admin.register(WOD_amrap)
-class WOD_amrap_Admin(admin.ModelAdmin):
-    pass
+@admin.register(Movement)
+class Movement_Admin(admin.ModelAdmin):
 
-@admin.register(WOD_emom)
-class WOD_emom_Admin(admin.ModelAdmin):
-    pass
+    list_display= ('move_name', 'tool', 'kg', 'lbs', 'poods', 'height_meters', 'height_ft', 'distance_meters',
+                   'distance_miles', 'calories', 'category')
 
-@admin.register(WOD_interval)
-class WOD_interval_Admin(admin.ModelAdmin):
-    pass
+@admin.register(Element)
+class Element_Admin(admin.ModelAdmin):
+    list_display = ('title',)
 
-@admin.register(WOD_tabata)
-class WOD_tabata_Admin(admin.ModelAdmin):
-    pass
+@admin.register(WOD)
+class WOD_Admin(admin.ModelAdmin):
+    list_display = ('title', )
 
 @admin.register(WODpersonal)
 class WOD_personal_Admin(admin.ModelAdmin):
