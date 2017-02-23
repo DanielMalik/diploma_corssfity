@@ -110,7 +110,7 @@ class Element(models.Model):
     reps_12 = models.SmallIntegerField(null=True, blank=True)
     move_13 = models.ForeignKey(Movement, on_delete=models.SET_NULL, null=True, blank=True, related_name='mov 13+')
     reps_13 = models.SmallIntegerField(null=True, blank=True)
-    mov_14 = models.ForeignKey(Movement, on_delete=models.SET_NULL, null=True, blank=True, related_name='mov 14+')
+    move_14 = models.ForeignKey(Movement, on_delete=models.SET_NULL, null=True, blank=True, related_name='mov 14+')
     reps_14 = models.SmallIntegerField(null=True, blank=True)
     move_15 = models.ForeignKey(Movement, on_delete=models.SET_NULL, null=True, blank=True, related_name='mov 15+')
     reps_15 = models.SmallIntegerField(null=True, blank=True)
@@ -118,13 +118,17 @@ class Element(models.Model):
     emom_interval_rest = models.SmallIntegerField(null=True, blank=True)
     score = models.CharField(max_length=128, null=True, blank=True)
 
-    @property
-    def moves(self):
-        list = []
-        for i in range(0, self.rounds):
-            new = models.ForeignKey(Movement, on_delete=models.SET_NULL, null=True, blank=True, related_name='+')
-            list.append(new)
-        return list
+    @property  #'all_moves' is a list of all dictionaris with moves and reps.
+    def all_moves(self):
+        all_moves_list_of_dictionaries = []
+        for k in range(1, 15):
+            m = 'move_' + str(k).zfill(2)
+            mm = 'self.'+m
+            print(m)
+            r = 'reps_' + str(k).zfill(2)
+            rr = 'self.'+r
+            all_moves_list_of_dictionaries.append({m: eval(mm), r: eval(rr)})
+        return all_moves_list_of_dictionaries
 
     def __str__(self):
         return self.title

@@ -26,13 +26,15 @@
                     <li> {{ tag.name }} </li>
                     {% endfor %}
                 </ul>
+
                 <p> pk: {{ w.pk }}</p>
                 <p> id: {{ w.id }}</p>
-                <h4> ELEMENTS: </h4>
+                <h4><strong>LIST OF ELEMENTS - OBJECTS: </strong></h4>
                 {% for e in w.elms %}
                 <p> el 1: {{ e }}</p>
                     <ul>
                         <li>T: {{e.title}}</li>
+                        <li><strong>LIST OF MOVEMENTS - OBJECTS {{ e.all_moves }}</strong></li>
                         <li>B: {{e.brief}}</li>
                         <li>C: {{e.category}}</li>
                         <li>moves: <ul>
