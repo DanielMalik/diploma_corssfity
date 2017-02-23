@@ -17,9 +17,31 @@
 
             <!--add {if} a.status == True than no buttons and add class 'accepted' . {else} this:-->
 
-            <div id="{{ wod.id }}">
+            <div id="{{ w.id }}">
                 <h3> WOD title {{ w.title }}</h3>
                 <p> Author: {{ w.author }}</p>
+                <h5> elms: {{ w.elms }}</h5>
+                <ul> TAGS:
+                    {% for tag in w.tags.all %}
+                    <li> {{ tag.name }} </li>
+                    {% endfor %}
+                </ul>
+                <p> pk: {{ w.pk }}</p>
+                <p> id: {{ w.id }}</p>
+                <h4> ELEMENTS: </h4>
+                {% for e in w.elms %}
+                <p> el 1: {{ e }}</p>
+                    <ul>
+                        <li>T: {{e.title}}</li>
+                        <li>B: {{e.brief}}</li>
+                        <li>C: {{e.category}}</li>
+                        <li>moves: <ul>
+                            <li>01: {{e.reps_01}} {{e.move_01}}</li>
+                            <li>02: {{e.reps_02}} {{e.move_02}}</li>
+                            <li>03: {{e.reps_02}} {{e.move_03}}</li>
+                        </ul></li>
+                    </ul>
+                {% endfor %}
 
             </div>
 

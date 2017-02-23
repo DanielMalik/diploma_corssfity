@@ -25,7 +25,7 @@ class Coach(models.Model):
     # application = models.OneToOneField('CoachApplication')
 
     def __str__(self):
-        return self.info
+        return self.user.username
     # Premium User - can create WOD's for Athletes and give feedbacks on their scores
 
 class Athlete(models.Model):
@@ -78,6 +78,7 @@ class Movement(models.Model):
 
 class Element(models.Model):
     title = models.CharField(max_length=128)
+    brief = models.CharField(max_length=128, null=True, blank=True)
     category = models.CharField(max_length=15, choices=CATEGORIES)
     kind = models.CharField(max_length=15, choices=KINDS)
     tags = TaggableManager()
@@ -117,6 +118,14 @@ class Element(models.Model):
     emom_interval_rest = models.SmallIntegerField(null=True, blank=True)
     score = models.CharField(max_length=128, null=True, blank=True)
 
+    @property
+    def moves(self):
+        list = []
+        for i in range(0, self.rounds):
+            new = models.ForeignKey(Movement, on_delete=models.SET_NULL, null=True, blank=True, related_name='+')
+            list.append(new)
+        return list
+
     def __str__(self):
         return self.title
 
@@ -134,9 +143,14 @@ class WOD(models.Model):
     athletes = models.ManyToManyField(Athlete, null=True, blank=True)
     score = models.CharField(max_length=128, null=True, blank=True)
 
+    @property
+    def elms(self):
+        list = [self.element_1, self.element_2, self.element_3, self.element_4, self.element_5]
+        return list
+
 class WODpersonal(models.Model):
     title = models.CharField(max_length=128, null=True, blank=True)
-    # author = models.ForeignKey(Athlete, on_delete=models.CASCADE)
+    author = models.ForeignKey(Athlete, on_delete=models.CASCADE, blank=True, null=True)
     date_created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     date_publish = models.DateTimeField(blank=True, null=True)
     tags = TaggableManager()
@@ -161,4 +175,6 @@ class CoachApplication(models.Model):
     pass_mail = models.CharField(max_length=64, null=True, blank=True)
     pass_phone = models.CharField(max_length=64, null=True, blank=True)
     pass_coach_added = models.BooleanField(default=False)
+
+
 

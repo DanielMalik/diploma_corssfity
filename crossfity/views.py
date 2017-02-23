@@ -271,6 +271,8 @@ def logout_view(request):
 class CoachProfile(View):
     def get(self, request):
         user = request.user.username
+        coach = request.user.username
+        print(user)
         wods = WOD.objects.all()
         ctx = {'user': user, 'wods': wods}
         return render(request, 'crossfity/profile.html', ctx)

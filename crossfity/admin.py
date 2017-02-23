@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import User
 from crossfity.models import CoachApplication, Coach, Athlete, Movement, Element, WOD, WODpersonal
-
 # Register your models here.
 
 @admin.register(CoachApplication)
@@ -26,11 +25,11 @@ class Movement_Admin(admin.ModelAdmin):
 
 @admin.register(Element)
 class Element_Admin(admin.ModelAdmin):
-    list_display = ('title',)
+    list_display = ('title', 'brief')
 
 @admin.register(WOD)
 class WOD_Admin(admin.ModelAdmin):
-    list_display = ('title', )
+    list_display = ('title',)
 
 @admin.register(WODpersonal)
 class WOD_personal_Admin(admin.ModelAdmin):
