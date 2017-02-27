@@ -19,8 +19,8 @@ from django.conf import settings
 from django.contrib import admin
 from django.contrib.auth.views import logout_then_login
 from crossfity.views import AddAthleteUserView, AthleteLog, AddCoachUserView, CoachLog, CoachVerification, \
-    CoachApplivationsView, CoachApplivationView, CoachApplivationDeleteView, CoachProfile, ApiEndpoint, \
-    secret_page
+    CoachApplivationsView, CoachApplivationView, CoachApplivationDeleteView, CoachProfile, AthleteProfile,\
+    ApiEndpoint, secret_page
 
 # OAuth2 provider endpoints
 oauth2_endpoint_views = [
@@ -62,4 +62,5 @@ urlpatterns = [
     url(r'^coachapplication/?$', CoachApplivationsView.as_view(), name='review-coach-applicants'),
     url(r'^coachapplicationaccept/(?P<pk>\d+)/?$', CoachApplivationView.as_view(), name='review-coach-applicants-accept'),
     url(r'^coachapplicationdelete/(?P<pk>\d+)/?$', CoachApplivationDeleteView.as_view(), name='review-coach-applicants-delete'),
+    url(r'^athlete/?$', AthleteProfile.as_view(), name='athlete-profile'),
 ]

@@ -36,6 +36,9 @@ class Athlete(models.Model):
     country = models.CharField(max_length=128)
     birth_date = models.DateField(null=True, blank=True)
 
+    def __str__(self):
+        return self.user.username
+
     # Regular User - can subscribe to Coach's WODs orcreate PersonalWODs
 
 # fields: tag-multi choices for charts; categories: lift, metcon; type AMRAP,EMOM; kind;
@@ -124,11 +127,12 @@ class Element(models.Model):
         for k in range(1, 15):
             m = 'move_' + str(k).zfill(2)
             mm = 'self.'+m
-            print(m)
+            # print(m)
             r = 'reps_' + str(k).zfill(2)
             rr = 'self.'+r
             all_moves_list_of_dictionaries.append({m: eval(mm), r: eval(rr)})
         return all_moves_list_of_dictionaries
+
 
     def __str__(self):
         return self.title
@@ -152,6 +156,9 @@ class WOD(models.Model):
         list = [self.element_1, self.element_2, self.element_3, self.element_4, self.element_5]
         return list
 
+    def __str__(self):
+        return self.title
+
 class WODpersonal(models.Model):
     title = models.CharField(max_length=128, null=True, blank=True)
     author = models.ForeignKey(Athlete, on_delete=models.CASCADE, blank=True, null=True)
@@ -164,6 +171,9 @@ class WODpersonal(models.Model):
     element_4 = models.ForeignKey(Element, on_delete=models.DO_NOTHING, null=True, blank=True, related_name='+')
     element_5 = models.ForeignKey(Element, on_delete=models.DO_NOTHING, null=True, blank=True, related_name='+')
     score = models.CharField(max_length=128, null=True, blank=True)
+
+    def __str__(self):
+        return self.title
 
 class CoachApplication(models.Model):
     name = models.CharField(max_length=128, null=False, blank=False)

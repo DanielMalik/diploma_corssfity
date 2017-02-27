@@ -121,7 +121,7 @@ class CoachApplivationView(PermissionRequiredMixin, View): #change status of apl
                 link = 'http://127.0.0.1:8000/ctr_coach/%s/%s' % (str(apl_code_forurl), pass_mail)
                 print(link)
 
-
+                # let's try to add celery task to send this email
                 aplicant.pass_mail = pass_mail
                 aplicant.pass_phone = pass_phone
                 mail = aplicant.e_mail
@@ -270,9 +270,26 @@ def logout_view(request):
 
 class CoachProfile(View):
     def get(self, request):
-        user = request.user.username
-        coach = request.user.username
-        print(user)
-        wods = WOD.objects.all()
-        ctx = {'user': user, 'wods': wods}
-        return render(request, 'crossfity/profile.html', ctx)
+        user = request.user
+        try:  # only for Coach users
+            coach = Coach.objects.get(user=user)
+            # all WODs created owned by this Coach
+            wods = WOD.objects.filter(author=coach)
+            ctx = {'user': user, 'wods': wods}
+            return render(request, 'crossfity/profile.html', ctx)
+        except:
+            #temporary
+            return HttpResponse('przekieruj, bo to nie jest Coach tylko Athlete')
+
+class AthleteProfile(View):
+    def get(self, request):
+        user = request.user
+        try:  # only for Athletes users
+            athlete = Athlete.objects.get(user=user)
+            # all WODs shared with this Athlete
+            wods = WOD.objects.filter(athletes=athlete)
+            ctx = {'user': user, 'wods': wods}
+            return render(request, 'crossfity/profile.html', ctx)
+        except:
+            #temporary
+            return HttpResponse('przekieruj, bo to nie jest Athlete')
