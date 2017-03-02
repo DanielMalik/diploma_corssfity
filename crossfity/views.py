@@ -23,6 +23,7 @@ from django.core.mail import send_mail
 
 from django.views.generic import DeleteView
 
+from crossfity.tasks import SendEmailTask
 
 from sendsms import api
 
@@ -192,8 +193,10 @@ class AddCoachUserView(View):
                     new_coach.save()
                     form_coach2 = AddCoachUser(request.POST, request.FILES, instance=new_coach)
                     form_coach2.save()
-
-                    return redirect('coach-login')
+                    user = User.objects.get(username=username)
+                    #pass to task something, then find instance of it in tasks.py, and find an email
+                    SendEmailTask.delay(user.username, user.email,  role)
+                    return redirect('coach-profile')
                 else:
                     form.add_error(None, "ERROR - sms code")
                     return render(request, 'crossfity/new_coach.html', {"form": form, 'form_coach': form_coach})
@@ -273,23 +276,24 @@ class CoachProfile(View):
         user = request.user
         try:  # only for Coach users
             coach = Coach.objects.get(user=user)
-            # all WODs created owned by this Coach
-            wods = WOD.objects.filter(author=coach)
-            ctx = {'user': user, 'wods': wods}
-            return render(request, 'crossfity/profile.html', ctx)
         except:
             #temporary
             return HttpResponse('przekieruj, bo to nie jest Coach tylko Athlete')
+
+        # all WODs created owned by this Coach
+        wods = WOD.objects.filter(author=coach)
+        ctx = {'user': user, 'wods': wods}
+        return render(request, 'crossfity/profile.html', ctx)
 
 class AthleteProfile(View):
     def get(self, request):
         user = request.user
         try:  # only for Athletes users
             athlete = Athlete.objects.get(user=user)
-            # all WODs shared with this Athlete
-            wods = WOD.objects.filter(athletes=athlete)
-            ctx = {'user': user, 'wods': wods}
-            return render(request, 'crossfity/profile.html', ctx)
         except:
             #temporary
             return HttpResponse('przekieruj, bo to nie jest Athlete')
+        # all WODs shared with this Athlete
+        wods = WOD.objects.filter(athletes=athlete)
+        ctx = {'user': user, 'wods': wods}
+        return render(request, 'crossfity/profile.html', ctx)

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'oauth2_provider',
     'corsheaders',
     'crossfity',
+    # 'django_celery_results',
 ]
 
 MIDDLEWARE = [
@@ -166,3 +167,12 @@ AUTHENTICATION_BACKENDS = (
 CORS_ORIGIN_ALLOW_ALL = True
 #cl id DITddv3HLNKkV6GGHKELoNWOkpttUeicl0wlokKz
 #cl secret XGyQzOJNw62oU5HvqDQtWYXYO6fAo3mlkiaaGTk7xnrM1rYhNWrrof26xJoPY7rXPs3H4OsVIE7C6XGyH9sXYc59CFqn3BHQMgCJt88mV7CWT4iGBkKq46iifzNK4nNn
+
+'''
+Settings for Celery starts here
+'''
+
+CELERY_BROKER_URL = 'amqp://guest:guest@localhost//'
+
+#  I don not need to store results for now
+# CELERY_RESULT_BACKEND = 'django-db'
