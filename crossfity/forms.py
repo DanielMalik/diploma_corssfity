@@ -1,6 +1,8 @@
 from django import forms
 
 from crossfity.models import CoachApplication, Coach
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 from django.forms import ModelForm
 from django.utils import timezone
 from crossfity import models
@@ -48,3 +50,16 @@ class AthleteLogin(forms.Form):
 class CoachLogin(forms.Form):
     login = forms.CharField(max_length=128)
     password = forms.CharField(widget=forms.PasswordInput)
+
+class CreateUserForm(UserCreationForm):
+
+    class Meta:
+        model = User
+        fields = ("username", "email", "password1", "password2")
+
+    def save(self, commit=True):
+        user = super(CreateUserForm, self).save(commit=False)
+        user.email = self.cleaned_data["email"]
+        if commit:
+            user.save()
+        return user

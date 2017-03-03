@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.utils import timezone
 from crossfity.models import Coach, Athlete, WOD
 from crossfity.forms import AddAthleteUser, AddCoachUser, AthleteLogin, CoachLogin, CoachAuthenticationForm
-from crossfity.forms import CoachApplication, CoachApplicationStatus
+from crossfity.forms import CoachApplication, CoachApplicationStatus, CreateUserForm
 
 from django.shortcuts import render, redirect
 from django.views import View
@@ -165,14 +165,14 @@ class AddCoachUserView(View):
         if pass_mails == aplication_instance.pass_mail:
             print(aplication_instance.name)
 
-            form = UserCreationForm
+            form = CreateUserForm
             form_coach = AddCoachUser()
             return render(request, 'crossfity/new_coach.html', {'form': form, 'form_coach': form_coach})
         else:
             return reverse_lazy('coach-verification')
     def post(self, request, apl_code, pass_mails):
         aplication_instance = CoachApplication.objects.get(pk=apl_code)
-        form = UserCreationForm(request.POST)
+        form = CreateUserForm(request.POST)
         form_coach = AddCoachUser(request.POST, request.FILES)
 
         if form.is_valid() and form_coach.is_valid() and pass_mails == aplication_instance.pass_mail\
@@ -193,9 +193,12 @@ class AddCoachUserView(View):
                     new_coach.save()
                     form_coach2 = AddCoachUser(request.POST, request.FILES, instance=new_coach)
                     form_coach2.save()
-                    user = User.objects.get(username=username)
-                    #pass to task something, then find instance of it in tasks.py, and find an email
-                    SendEmailTask.delay(user.username, user.email,  role)
+
+                    # send confirmation email with Celery
+                    user_username = str(username)
+                    print('user_username ' + user_username)
+                    role = 'coach'
+                    SendEmailTask.delay(user_username,  role)
                     return redirect('coach-profile')
                 else:
                     form.add_error(None, "ERROR - sms code")
