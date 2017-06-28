@@ -157,9 +157,9 @@ SENDSMS_BACKEND = 'myapp.mysmsbackend.SmsBackend'
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'djangocrossfitytest@gmail.com' # tu wpisac maila aby działało
-EMAIL_HOST_PASSWORD = 'coderslab' #tu wpisac hasło zeby działało
-EMAIL_PORT = 587
+EMAIL_HOST_USER = diploma_crossfity.settings_local.MAIL_ADDRESS
+EMAIL_HOST_PASSWORD = diploma_crossfity.settings_local.MAIL_PASSWORD
+EMAIL_PORT = diploma_crossfity.settings_local.MAIL_PORT
 
 # settings for django oauth2
 
