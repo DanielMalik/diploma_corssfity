@@ -11,8 +11,11 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+import diploma_crossfity.settings_local
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -37,10 +40,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'phonenumber_field',
     'bootstrap3',
     'taggit',
     'rest_framework',
-    'oauth2_provider',
     'corsheaders',
     'crossfity',
     # 'django_celery_results',
@@ -56,7 +59,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     # 'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-    'oauth2_provider.middleware.OAuth2TokenMiddleware',
+    # 'oauth2_provider.middleware.OAuth2TokenMiddleware',
 ]
 
 ROOT_URLCONF = 'diploma_crossfity.urls'
@@ -85,11 +88,12 @@ WSGI_APPLICATION = 'diploma_crossfity.wsgi.application'
 
 DATABASES = {
     'default': {
-        'HOST': '127.0.0.1',
-        'NAME': 'diploma_crosfity',
-        'ENGINE': 'mysql.connector.django',
-        'USER': 'root',
-        'PASSWORD': 'coderslab',
+        'ENGINE': 'django.db.backends.mysql',
+        'HOST': diploma_crossfity.settings_local.DB_HOST,
+        'PORT': 3306,
+        'NAME': diploma_crossfity.settings_local.DB_NAME,
+        'USER': diploma_crossfity.settings_local.DB_USER,
+        'PASSWORD': diploma_crossfity.settings_local.DB_PASSWORD,
         'OPTIONS': {
                     'autocommit': True,
         },

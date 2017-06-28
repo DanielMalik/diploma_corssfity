@@ -1,2 +1,4 @@
+*.pyc
 .idea/
 static/media/
+settings_local.py

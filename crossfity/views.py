@@ -14,7 +14,7 @@ from django.contrib.auth.decorators import login_required
 
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 
-from oauth2_provider.views.generic import ProtectedResourceView
+# from provider.views.generic import ProtectedResourceView
 
 from django.http import HttpResponse
 
@@ -30,13 +30,13 @@ from sendsms import api
 # Create your views here.
 #oauth2
 
-class ApiEndpoint(ProtectedResourceView):
-    def get(self, request, *args, **kwargs):
-        return HttpResponse('Hello, OAuth2!')
-
-@login_required()
-def secret_page(request, *args, **kwargs):
-    return HttpResponse('Secret contents!', status=200)
+# class ApiEndpoint(ProtectedResourceView):
+#     def get(self, request, *args, **kwargs):
+#         return HttpResponse('Hello, OAuth2!')
+#
+# @login_required()
+# def secret_page(request, *args, **kwargs):
+#     return HttpResponse('Secret contents!', status=200)
 
 
 # mu views

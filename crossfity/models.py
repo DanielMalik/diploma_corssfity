@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from taggit.managers import TaggableManager
+from phonenumber_field.modelfields import PhoneNumberField
 
 from django.utils import timezone
 
@@ -148,7 +149,7 @@ class WOD(models.Model):
     element_3 = models.ForeignKey(Element, on_delete=models.DO_NOTHING, null=True, blank=True, related_name='+')
     element_4 = models.ForeignKey(Element, on_delete=models.DO_NOTHING, null=True, blank=True, related_name='+')
     element_5 = models.ForeignKey(Element, on_delete=models.DO_NOTHING, null=True, blank=True, related_name='+')
-    athletes = models.ManyToManyField(Athlete, null=True, blank=True)
+    athletes = models.ManyToManyField(Athlete, blank=True)
     score = models.CharField(max_length=128, null=True, blank=True)
 
     @property
