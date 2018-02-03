@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '*zk!ku(z=i$27%i&9non5y_tj(n3n35%xfgp4h_m9r7lk%njo4'
+SECRET_KEY = ''
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'crossfity',
-    # 'django_celery_results',
 ]
 
 MIDDLEWARE = [
@@ -58,8 +57,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    # 'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-    # 'oauth2_provider.middleware.OAuth2TokenMiddleware',
 ]
 
 ROOT_URLCONF = 'diploma_crossfity.urls'
@@ -169,14 +166,11 @@ AUTHENTICATION_BACKENDS = (
     )
 
 CORS_ORIGIN_ALLOW_ALL = True
-#cl id DITddv3HLNKkV6GGHKELoNWOkpttUeicl0wlokKz
-#cl secret XGyQzOJNw62oU5HvqDQtWYXYO6fAo3mlkiaaGTk7xnrM1rYhNWrrof26xJoPY7rXPs3H4OsVIE7C6XGyH9sXYc59CFqn3BHQMgCJt88mV7CWT4iGBkKq46iifzNK4nNn
 
-'''
-Settings for Celery starts here
-'''
 
 CELERY_BROKER_URL = 'amqp://guest:guest@localhost//'
 
-#  I don not need to store results for now
-# CELERY_RESULT_BACKEND = 'django-db'
+try:
+    from diploma_crossfity.settings_local import *
+except ImportError:
+    pass

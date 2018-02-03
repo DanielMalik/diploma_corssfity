@@ -5,11 +5,12 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.contrib.auth.models import User
 
+
 class SendEmailTask(Task):
 
     def run(self, user_username, role):
         user = User.objects.get(username=user_username)
-        subject = 'Welcome %s' % role
+        subject = f'Welcome {role}'
         from_mail = 'djangocrossfitytest@gmail.com'
         to = user.email
         html_content = render_to_string('crossfity/welcome_email.html', {'user': user.username, 'role': role})

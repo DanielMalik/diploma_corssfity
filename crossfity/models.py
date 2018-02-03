@@ -1,49 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
-from taggit.managers import TaggableManager
-from phonenumber_field.modelfields import PhoneNumberField
-
 from django.utils import timezone
 
-
-# Create your models here.
-
-class Coach(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    certification_level1 = models.CharField(max_length=128),
-    certification_level2 = models.CharField(max_length=128, null=True, blank=True),
-    certification_level3 = models.CharField(max_length=128, null=True, blank=True),
-    certification_level4 = models.CharField(max_length=128, null=True, blank=True),
-    avatar = models.ImageField(upload_to='static/media', null=True, blank=True)
-    affiliate = models.CharField(max_length=128)
-    info = models.TextField()
-    country = models.CharField(max_length=128)
-    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$',
-                    message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
-    phone_number = models.CharField(max_length=15, validators=[phone_regex], blank=True)
-    sms_code = models.CharField(max_length=32, null=True, blank=True)
-    # application = models.OneToOneField('CoachApplication')
-
-    def __str__(self):
-        return self.user.username
-    # Premium User - can create WOD's for Athletes and give feedbacks on their scores
-
-class Athlete(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    avatar = models.ImageField(upload_to='static/media', null=True, blank=True)
-    box = models.CharField(max_length=128)
-    info = models.TextField()
-    country = models.CharField(max_length=128)
-    birth_date = models.DateField(null=True, blank=True)
-
-    def __str__(self):
-        return self.user.username
-
-    # Regular User - can subscribe to Coach's WODs orcreate PersonalWODs
-
-# fields: tag-multi choices for charts; categories: lift, metcon; type AMRAP,EMOM; kind;
-# sort; genre, manner; movements; TimeCap; score; redone; date_released; date_performed; author(owner)
+from taggit.managers import TaggableManager
 
 CATEGORIES = (
         ('OLY', 'OLY - Olympic Weightlifting'),
@@ -59,6 +19,40 @@ KINDS = (
     ('DIST_ROW', 'Row for time'),
     ('1RM OLY', '1RM max in OLY movement')
 )
+
+
+class Coach(models.Model):
+    """ Premium User - can create WOD's for Athletes and give feedbacks on their scores."""
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    certification_level1 = models.CharField(max_length=128),
+    certification_level2 = models.CharField(max_length=128, null=True, blank=True),
+    certification_level3 = models.CharField(max_length=128, null=True, blank=True),
+    certification_level4 = models.CharField(max_length=128, null=True, blank=True),
+    avatar = models.ImageField(upload_to='static/media', null=True, blank=True)
+    affiliate = models.CharField(max_length=128)
+    info = models.TextField()
+    country = models.CharField(max_length=128)
+    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$',
+                    message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+    phone_number = models.CharField(max_length=15, validators=[phone_regex], blank=True)
+    sms_code = models.CharField(max_length=32, null=True, blank=True)
+
+    def __str__(self):
+        return self.user.username
+
+
+class Athlete(models.Model):
+    """ Regular User - can subscribe to Coach's WODs orcreate PersonalWODs."""
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    avatar = models.ImageField(upload_to='static/media', null=True, blank=True)
+    box = models.CharField(max_length=128)
+    info = models.TextField()
+    country = models.CharField(max_length=128)
+    birth_date = models.DateField(null=True, blank=True)
+
+    def __str__(self):
+        return self.user.username
+
 
 class Movement(models.Model):
     move_name = models.CharField(max_length=128)
@@ -77,8 +71,11 @@ class Movement(models.Model):
         return self.move_name
 
     class Meta:
-        unique_together = ('move_name', 'tool', 'kg', 'lbs', 'poods', 'height_meters', 'height_ft', 'distance_meters',
-                           'distance_miles', 'calories')
+        unique_together = (
+            'move_name', 'tool', 'kg', 'lbs', 'poods', 'height_meters', 'height_ft', 'distance_meters',
+            'distance_miles', 'calories',
+        )
+
 
 class Element(models.Model):
     title = models.CharField(max_length=128)
@@ -122,21 +119,9 @@ class Element(models.Model):
     emom_interval_rest = models.SmallIntegerField(null=True, blank=True)
     score = models.CharField(max_length=128, null=True, blank=True)
 
-    @property  #'all_moves' is a list of all dictionaris with moves and reps.
-    def all_moves(self):
-        all_moves_list_of_dictionaries = []
-        for k in range(1, 15):
-            m = 'move_' + str(k).zfill(2)
-            mm = 'self.'+m
-            # print(m)
-            r = 'reps_' + str(k).zfill(2)
-            rr = 'self.'+r
-            all_moves_list_of_dictionaries.append({m: eval(mm), r: eval(rr)})
-        return all_moves_list_of_dictionaries
-
-
     def __str__(self):
         return self.title
+
 
 class WOD(models.Model):
     title = models.CharField(max_length=128, null=True, blank=True)
@@ -153,12 +138,12 @@ class WOD(models.Model):
     score = models.CharField(max_length=128, null=True, blank=True)
 
     @property
-    def elms(self):
-        list = [self.element_1, self.element_2, self.element_3, self.element_4, self.element_5]
-        return list
+    def all_elements(self):
+        return [self.element_1, self.element_2, self.element_3, self.element_4, self.element_5]
 
     def __str__(self):
         return self.title
+
 
 class WODpersonal(models.Model):
     title = models.CharField(max_length=128, null=True, blank=True)
@@ -176,13 +161,16 @@ class WODpersonal(models.Model):
     def __str__(self):
         return self.title
 
+
 class CoachApplication(models.Model):
     name = models.CharField(max_length=128, null=False, blank=False)
     surname = models.CharField(max_length=128, null=False, blank=False)
     certification = models.CharField(max_length=128, null=False, blank=False)
     e_mail = models.EmailField(max_length=254, null=False, blank=False)
-    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$',
-                                 message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+    phone_regex = RegexValidator(
+        regex=r'^\+?1?\d{9,15}$',
+        message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.",
+    )
     phone_number = models.CharField(max_length=15, validators=[phone_regex], null=False, blank=False)
     description = models.TextField(null=False, blank=False)
     application_date = models.DateTimeField(default=timezone.now)
@@ -190,6 +178,3 @@ class CoachApplication(models.Model):
     pass_mail = models.CharField(max_length=64, null=True, blank=True)
     pass_phone = models.CharField(max_length=64, null=True, blank=True)
     pass_coach_added = models.BooleanField(default=False)
-
-
-
